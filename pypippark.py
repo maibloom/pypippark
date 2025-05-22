@@ -7,9 +7,11 @@ import venv
 def print_usage():
     print("Usage: pypippark [package1 package2 ...]")
     print("If no package arguments are provided, you'll be prompted for them.\n")
-    print("This script creates (or reuses) a virtual environment in ~/pypippark/deps,")
+    print("This script creates (or reuses) a virtual environment in /usr/local/bin/pypippark/deps,")
     print("installs the specified packages, and if run from an interactive terminal,")
     print("automatically launches a new shell with the environment activated.")
+    print("\nTo manually activate the environment later, run:")
+    print("  source /usr/local/bin/pypippark/deps/bin/activate\n")
 
 def update_bashrc(venv_bin_path):
     """
@@ -80,9 +82,14 @@ def main():
         print("No packages specified. Exiting.")
         sys.exit(1)
     
-    # Define the directory for the virtual environment
-    venv_dir = os.path.expanduser("~/pypippark/deps")
-    os.makedirs(venv_dir, exist_ok=True)
+    # Define the directory for the virtual environment (inside /usr/local/bin/pypippark).
+    venv_dir = "/usr/local/bin/pypippark/deps"
+    try:
+        os.makedirs(venv_dir, exist_ok=True)
+    except PermissionError as e:
+        print(f"Permission denied: Unable to create directory '{venv_dir}'.")
+        print("Try running the script with appropriate permissions (e.g., using sudo).")
+        sys.exit(1)
     
     # Create (or reuse) the virtual environment.
     activation_script = create_or_get_venv(venv_dir)
