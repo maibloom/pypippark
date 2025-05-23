@@ -7,13 +7,12 @@ import venv
 def print_usage():
     print("Usage: pypippark [package1 package2 ...]")
     print("If no package arguments are provided, you'll be prompted for them.\n")
-    print("This script creates (or reuses) a virtual environment in ~/pypippark/deps,")
-    print("installs the specified packages, and if run from an interactive terminal,")
-    print("automatically launches a new shell with the environment activated.")
+    print("This script creates (or reuses) a virtual environment in ./venv,")
+    print("installs the specified packages, and provides instructions to activate it.")
 
 def update_bashrc(venv_bin_path):
     """
-    Append the virtual environment's bin directory to ~/.bashrc if not already present.
+    Optionally append the virtual environment's bin directory to ~/.bashrc if not already present.
     This makes future sessions simpler.
     """
     bashrc_path = os.path.expanduser("~/.bashrc")
@@ -54,16 +53,6 @@ def install_packages(venv_dir, packages):
         sys.exit(result.returncode)
     print("Packages installed successfully.")
 
-def activate_shell(activation_script):
-    """
-    Automatically launch an interactive shell with the virtual environment activated.
-    We use the user's shell (defaulting to bash) and run a command to source the activation script.
-    """
-    shell = os.environ.get("SHELL", "/bin/bash")
-    print("Launching an interactive shell with the virtual environment activated...")
-    # Use "-i" for interactive; the command sources the activation script
-    os.execlp(shell, shell, "-i", "-c", f"source {activation_script} && exec {shell} -i")
-
 def main():
     # If help is requested, show usage.
     if len(sys.argv) > 1 and sys.argv[1] in ("--help", "-h"):
@@ -80,8 +69,9 @@ def main():
         print("No packages specified. Exiting.")
         sys.exit(1)
     
-    # Define the directory for the virtual environment
-    venv_dir = os.path.expanduser("~/pypippark/deps")
+    # Define the directory for the virtual environment.
+    # Changed from ~/pypippark/deps to ./venv in the current working directory.
+    venv_dir = os.path.join(os.getcwd(), "venv")
     os.makedirs(venv_dir, exist_ok=True)
     
     # Create (or reuse) the virtual environment.
@@ -93,12 +83,9 @@ def main():
     # Install the requested packages.
     install_packages(venv_dir, packages)
     
-    # If running interactively, automatically launch a new shell with the venv activated.
-    if sys.stdin.isatty():
-        activate_shell(activation_script)
-    else:
-        print("Installation complete.")
-        print(f"To activate the virtual environment manually, run:\n  source {activation_script}")
+    # Instead of launching a new shell, simply instruct the user on how to activate the venv.
+    print("Installation complete.")
+    print(f"To activate the virtual environment, run:\n  source {activation_script}")
 
 if __name__ == "__main__":
     main()
