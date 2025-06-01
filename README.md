@@ -28,6 +28,8 @@ omnipkg put install pypippark
 you can git this project and run the bash script file:
 
 ```
+sudo pacman -S python-pip
+
 git clone https://www.github.com/maibloom/pypippark/
 
 cd pypippark
