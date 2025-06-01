@@ -13,7 +13,7 @@ The Theory is to install any dependency in a dedicated location of your system a
 ---
 ## Installation
 
-### First method: With OmniPkg Package Manager 
+### Method 1: With OmniPkg Package Manager 
 
 1. [Install OmniPkg Package Manager](https://github.com/maibloom/omnipkg-app)
 
@@ -21,4 +21,18 @@ The Theory is to install any dependency in a dedicated location of your system a
 
 ```
 omnipkg put install pypippark
+```
+
+### Method 2: using git
+
+you can git this project and run the bash script file:
+
+```
+git clone https://www.github.com/maibloom/pypippark/
+
+cd pypippark
+
+chmod +x *
+
+sudo bash install.sh
 ```
